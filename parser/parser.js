@@ -10,6 +10,7 @@ const inputStream = fs.createReadStream(process.argv[2]);
 
 const filter = ['/', 'cup', 'ounce', 'package', '&nbsp', 'tablespoon', 'teaspoon', 'degree', 'container', 'can', 'pound'];
 const parsed = [];
+const dictionay = {};
 let eof = false;
 
 const rl = readline.createInterface({
@@ -21,6 +22,7 @@ rl.on('close', () => {
     if (err) throw err;
     console.log('Done.');
   });
+  console.log(Object.keys(dictionay).length)
 });
 
 rl.on('line', (input) => {
@@ -43,7 +45,11 @@ rl.on('line', (input) => {
       var word = taggedWord[0];
       var tag = taggedWord[1];
       if (tag === 'NNS') {
-        word = word.substr(0, word.length - 1);
+        if (word.substr(word.length - 3, word.length) === 'oes') {
+          word = word.substr(0, word.length - 2);
+        } else {
+          word = word.substr(0, word.length - 1);
+        }
         tag = 'NN';
       }
       word = word.replace(/[&\*]/g, '');
@@ -55,6 +61,7 @@ rl.on('line', (input) => {
     const concatWords = cleanedWords.join(' ');
     if (cleanedWords.length === 0 || ingredient.indexOf(concatWords) !== -1) continue;
     ingredient.push(concatWords);
+    dictionay[concatWords] = 1;
   }
   parsed.push(ingredient.join(','));
 });
