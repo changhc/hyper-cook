@@ -14,7 +14,7 @@ const dictionay = {};
 let eof = false;
 
 const createScript = () => {
-  let script = 'CREATE TABLE recipe (\n\ttitle\tVARCHAR(100) NOT NULL,\n\turl\tVARCHAR(200) NOT NULL,\n\timg\tTEXT,\n';
+  let script = 'CREATE TABLE recipe (\n\ttitle\tVARCHAR(100) NOT NULL,\n\turl\tVARCHAR(200) NOT NULL,\n\timg\tTEXT,\n\tingredient\tTEXT NOT NULL,\n';
   for (key in dictionay) {
     if (key === '') console.log(1);
     script += `\t${key}\tBOOLEAN,\n`;
@@ -24,7 +24,7 @@ const createScript = () => {
   for (index in parsed) {
     const recipe = parsed[index];
     const title = recipe.title.replace(/'/g, '\'\'');
-    script += `INSERT INTO recipe (title, url, img,${recipe.ingredient.join(',')}) VALUES ('${title}', '${recipe.url}', '${recipe.img}', ${Array(recipe.ingredient.length).fill('TRUE').join(',')});\n`;
+    script += `INSERT INTO recipe (title, url, img, ingredient, ${recipe.ingredient.join(',')}) VALUES ('${title}', '${recipe.url}', '${recipe.img}', '${recipe.ingredient.join(',')}', ${Array(recipe.ingredient.length).fill('TRUE').join(',')});\n`;
   }
   return script;
 }
