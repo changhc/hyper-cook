@@ -48,6 +48,7 @@ server.post('/api/ingredient', (req, res) => {
       .then((result) => {
         res.send(JSON.stringify({ recipe: result, next: result.length === recipePerPage }));
       })
+      .catch(err => res.sendStatus(404))
   } else {
     knex
       .select('title', 'url', 'img')
@@ -57,6 +58,7 @@ server.post('/api/ingredient', (req, res) => {
       .then((result) => {
         res.send(JSON.stringify({ recipe: result, next: result.length === recipePerPage }));
       })
+      .catch(err => res.sendStatus(404))
   }
 });
 
@@ -74,6 +76,7 @@ server.post('/api/recipe', (req, res) => {
     .then((result) => {
       res.send(JSON.stringify({ recipe: result }));
     })
+    .catch(err => res.sendStatus(404))
 });
 
 server.get('*', function (req, res) {

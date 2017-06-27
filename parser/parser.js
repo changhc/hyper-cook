@@ -8,7 +8,7 @@ if (process.argv.length !== 3) {
 
 const inputStream = fs.createReadStream(process.argv[2]);
 
-const filter = ['/', 'cup', 'ounce', 'package', '&nbsp', 'tablespoon', 'teaspoon', 'degree', 'container', 'can', 'pound', 'inch'];
+const filter = ['/', 'cup', 'ounce', 'package', 'nbsp', 'tablespoon', 'teaspoon', 'degree', 'container', 'bunch', 'jar', 'fluid', 'can', 'pound', 'inch', 'ingredient', 'recipe'];
 const parsed = [];
 const dictionay = {};
 let eof = false;
@@ -54,6 +54,7 @@ rl.on('line', (input) => {
   recipe.url = raw.f2f_url;
   recipe.img = raw.image_url;
   const ingredient = [];
+  
   for (let i = 0; i < ingredients.length; i+= 1) {
     const cleanedWords = [];
     ingredients[i].replace(/\(.*\)/g, '');
@@ -65,6 +66,7 @@ rl.on('line', (input) => {
     var words = new pos.Lexer().lex(ingredients[i]);
     var tagger = new pos.Tagger();
     var taggedWords = tagger.tag(words);
+    
     for (let j in taggedWords) {
       var taggedWord = taggedWords[j];
       var word = taggedWord[0];
@@ -77,12 +79,13 @@ rl.on('line', (input) => {
         }
         tag = 'NN';
       }
+      word = word.toLowerCase();
       word = word.replace(/[&\*%]/g, '');
       word = word.replace(/-/g, '_');
       if (tag !== 'NN' || filter.indexOf(word) !== -1 || word.length === 1) {
         continue;
       }
-      cleanedWords.push(word.toLowerCase());
+      cleanedWords.push(word);
     }
     const concatWords = cleanedWords.join('_');
     if (concatWords.length === 0 || ingredient.indexOf(concatWords) !== -1) continue;
