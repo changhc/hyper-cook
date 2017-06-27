@@ -14,7 +14,7 @@ const knex = require('knex')({
   }
 });
 
-const recipePerPage = 50;
+const recipePerPage = 30;
 
 const server = express();
 const port = process.env.PORT || 5000;
@@ -44,7 +44,7 @@ server.post('/api/ingredient', (req, res) => {
       .select('title', 'url', 'img')
       .from('recipe')
       .orderByRaw(`(${commandArray.join(' + ')}) DESC`)
-      .limit(30)
+      .limit(recipePerPage)
       .then((result) => {
         res.send(JSON.stringify({ recipe: result, next: result.length === recipePerPage }));
       })
@@ -53,7 +53,7 @@ server.post('/api/ingredient', (req, res) => {
       .select('title', 'url', 'img')
       .from('recipe')
       .whereRaw(ingredient.join(' and '))
-      .limit(30)
+      .limit(recipePerPage)
       .then((result) => {
         res.send(JSON.stringify({ recipe: result, next: result.length === recipePerPage }));
       })
@@ -66,7 +66,14 @@ server.post('/api/recipe', (req, res) => {
     res.sendStatus(400);
     return;
   }
-  hello;
+  knex
+    .select('title', 'url', 'img', 'ingredient')
+    .from('recipe')
+    .where('title', '=', title)
+    .limit(recipePerPage)
+    .then((result) => {
+      res.send(JSON.stringify({ recipe: result }));
+    })
 });
 
 server.get('*', function (req, res) {
