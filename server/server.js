@@ -1,7 +1,7 @@
 require('dotenv').load();
 const express = require('express');
 const bodyParser = require('body-parser');
-const crypto = require('crypto');
+const request = require('request');
 const pg = require('pg');
 const knex = require('knex')({
   client: 'pg',
@@ -77,6 +77,17 @@ server.post('/api/recipe', (req, res) => {
       res.send(JSON.stringify({ recipe: result }));
     })
     .catch(err => res.sendStatus(404))
+});
+
+server.post('/api/message', (req, res) => {
+  request
+    .get(process.env.LUIS_ENDPOINT + encodeURI(req.body.query))
+    .on('data', (response) => {
+      const jsonObj = JSON.parse(response.toString());
+      const responseObj = {};
+      if (jsonObj.topScoringIntent.intent === 'Greetings') responseObj.message = "Hola!";
+      res.send(JSON.stringify(responseObj));
+    })
 });
 
 server.get('*', function (req, res) {
