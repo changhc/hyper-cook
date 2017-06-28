@@ -10,7 +10,7 @@ let userSchema = new Schema({
       id: {type: String},
       name: { type: String },
 //      foodType: { type: String },
-      day:  { type: Date },
+      day:  { type: Number },
 //      amount:{
 //          quantity: {type: Number},
 //          unit: {type: String},
