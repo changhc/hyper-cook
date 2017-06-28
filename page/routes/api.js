@@ -26,7 +26,7 @@ router.put('/foodStorage', function(req, res) {
     .then(() => pullStorage(req, res))
     .catch(err => console.log(err));
   } else {
-    userHandler.deleteStorageByUserName(username, req.body.name)
+    userHandler.deleteStorageById(username, req.body.id)
     .then(() => console.log("remove food from the freeze"))
     .then(() => pullStorage(req, res))
     .catch(err => console.log(err));
