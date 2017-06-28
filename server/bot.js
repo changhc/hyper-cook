@@ -21,7 +21,10 @@ module.exports = class Bot {
         this.say(res, 'Your fridge is empty! Damn!', 'DeleteIngredient');
         return;
       }
-      if (ingredients[name].length !== 1) {
+      if (ingredients[name] === undefined) {
+        this.say(res, 'Your don\'t have this in your fridge! Damn!', 'DeleteIngredient');
+        return;
+      } else if (ingredients[name].length !== 1) {
         ingredients[name].shift();
       } else {
         delete ingredients[name];

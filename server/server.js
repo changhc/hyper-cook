@@ -153,8 +153,16 @@ server.post('/api/fridge', (req, res) => {
         res.sendStatus(400);
         return;
       }
+      const name = req.body.name;
       if (ingredients[name].length !== 1) {
-        ingredients[name].shift();
+        const len = ingredients[name].length;
+        for (let i in ingredients[name]) {
+          if (ingredients[name][i].id === req.body.id) {
+            ingredients[name].splice(i, 1);
+          }
+        }
+        if (len === ingredients[name].length)
+          ingredients[name].shift();
       } else {
         delete ingredients[name];
       }
@@ -178,6 +186,9 @@ server.post('/api/message', (req, res) => {
     bot.say(res, 'Fuck!');
     return;
   }
+  if (say === 'ggg') {
+    new Fridge({ userId: 'ric' }).save();
+  }
   request
     .get(process.env.LUIS_ENDPOINT + encodeURI(req.body.say))
     .on('data', (response) => {
@@ -191,7 +202,7 @@ server.post('/api/message', (req, res) => {
         bot.say(res, 'Hello! What can I do for you?');
       } else if (intent === 'FindRecipe') {
         if (jsonObj.entities.length === 0) {
-          bot.say(res, 'Hmm... I don\'t quite understand what you want to find.');    
+          bot.say(res, 'Hmm... I don\'t quite understand what you want to find.');
         } else {
           bot.queryTitle(jsonObj.entities[0].entity, knex, res);
         }
@@ -202,7 +213,7 @@ server.post('/api/message', (req, res) => {
           bot.addIngredient('ric', {name: jsonObj.entities[0].entity, count: 2, exp: 8}, res);
         }
       } else if (intent === 'DeleteIngredient') {
-        bot.deleteIngredient('ric', '1498653881103', res);
+        bot.deleteIngredient('ric', 'pineapple', res);
       }
     });
 });
