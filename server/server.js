@@ -2,6 +2,7 @@ require('dotenv').load();
 const express = require('express');
 const bodyParser = require('body-parser');
 const request = require('request');
+const mongoose = require('mongoose');
 const pg = require('pg');
 const knex = require('knex')({
   client: 'pg',
@@ -13,6 +14,15 @@ const knex = require('knex')({
     database: process.env.DB_NAME,
   }
 });
+
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI, { useMongoClient: true });
+mongoose.connection.on('error', console.error.bind(console, 'connection error:'));
+mongoose.connection.once('open', function () {
+  console.log('connected');
+  User = mongoose.connection.model('User', { name: String, password: String });
+});
+let User;
 
 const recipePerPage = 30;
 
@@ -86,7 +96,18 @@ server.post('/api/message', (req, res) => {
       const jsonObj = JSON.parse(response.toString());
       const responseObj = {};
       if (jsonObj.topScoringIntent.intent === 'Greetings') responseObj.message = "Hola!";
-      res.send(JSON.stringify(responseObj));
+      const user = new User({ name: 'Man', password: '123' });
+      console.log('obj: ',user);
+      user.save((err, doc) => {
+        console.log(err, doc)
+          if (err) {
+            res.send(400, err);
+            return;
+          }
+          console.log('new user', doc);
+          res.send(JSON.stringify(responseObj));
+        })
+      
     })
 });
 
