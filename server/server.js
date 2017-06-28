@@ -108,15 +108,27 @@ server.post('/api/fridge', (req, res) => {
         userId: fridge.userId,
         fridge: [],
       };
-      for (let i in fridge) {
-        const dayT = Math.ceil((parseInt(fridge[i].id, 10) - now) / 1000 / 86400);   // convert to day
-        body.fridge.push({ id: fridge[i].id, name: fridge[i].name, day: datT, chosen: false });
+      if (fridge.ingredients === undefined) {
+        res.status(400).send('empty');
+        return;
+      }
+      for (let i in fridge.ingredients) {
+        console.log(fridge.ingredients[i])
+        const list = [];
+        for (let j in fridge.ingredients[i]) {
+          const dayT = Math.ceil((parseInt(fridge.ingredients[i][j].exp, 10) - now) / 1000 / 86400);   // convert to day
+          body.fridge.push({ id: fridge.ingredients[i][j].addTime, name: i, day: dayT, chosen: false });
+        }
       }
       res.send(JSON.stringify(body));
 
     });
   } else if (req.body.action === 'add') {
-    if (typeof(req.body.ingredient) !== 'object') {
+
+    const ingredient = req.body.ingredient;
+    console.log(ingredient)
+    if (typeof(ingredient) !== 'object') {
+      res.sendStatus(400);
       return;
     }
     Fridge.findOne({ userId: req.body.userId }, (err, fridge) => {
@@ -129,7 +141,12 @@ server.post('/api/fridge', (req, res) => {
       if (ingredients === undefined) {
         ingredients = {};
       }
-      ingredients[Date.now().toString()] = ingredient;
+      if (ingredients[ingredient.name] === undefined) {
+        ingredients[ingredient.name] = [];
+      }
+      const day = Date.now() + parseInt(ingredient.day, 10) * 1000 * 86400;
+      console.log(day)
+      ingredients[ingredient.name].push({ addTime: Date.now(), count: 1, exp: day });
       fridge.ingredients = ingredients;
       fridge.markModified('ingredients');
       fridge.save((err, result) => {
@@ -150,11 +167,14 @@ server.post('/api/fridge', (req, res) => {
       }
       let ingredients = fridge.ingredients;
       if (ingredients === undefined) {
-        res.sendStatus(400);
+        res.status(400).send('empty');
         return;
       }
       const name = req.body.name;
-      if (ingredients[name].length !== 1) {
+      if (ingredients[name] === undefined) {
+        res.status(400).send('No such ingredient in your fridge');
+        return;
+      } else if (ingredients[name].length !== 1) {
         const len = ingredients[name].length;
         for (let i in ingredients[name]) {
           if (ingredients[name][i].id === req.body.id) {
