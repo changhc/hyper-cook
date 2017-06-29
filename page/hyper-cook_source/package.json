@@ -1,0 +1,31 @@
+{
+  "name": "hyper-cook",
+  "homepage": "https://houtoto13579.github.io/hyper-cook",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "he": "^1.1.1",
+    "isomorphic-fetch": "^2.2.1",
+    "rc-calendar": "^8.4.5",
+    "rc-time-picker": "^2.4.1",
+    "react": "^15.6.1",
+    "react-bootstrap-sweetalert": "^3.0.0",
+    "react-dom": "^15.6.1",
+    "react-fab": "^1.0.0",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^1.0.0",
+    "react-scripts": "1.0.7"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+   "proxy": "http://localhost:3000"
+}
