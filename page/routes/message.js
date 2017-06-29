@@ -37,16 +37,27 @@ router.post('/', (req, res) => {
         } else if (jsonObj.entities.length === 2) {
           const dateObj = jsonObj.entities[0].type === 'ingredient' ? jsonObj.entities[1] : jsonObj.entities[0];
           const ingredientObj = jsonObj.entities[0].type === 'ingredient' ? jsonObj.entities[0] : jsonObj.entities[1];
-          const dayDiff = (new Date(dateObj.resolution.values[0].end) - Date.now()) / 1000 / 86400;
-          bot.addIngredient({name: ingredientObj.entity, id: 123, day: dayDiff}, res);
+          let dayDiff;
+          if (dateObj.resolution.values[dateObj.resolution.values.length - 1].end !== undefined) {
+            dayDiff = (new Date(dateObj.resolution.values[dateObj.resolution.values.length - 1].end) - Date.now()) / 1000 / 86400;
+          } else {
+            dayDiff = (new Date(dateObj.resolution.values[dateObj.resolution.values.length - 1].value) - Date.now()) / 1000 / 86400;
+          }
+
+          bot.addIngredient({ name: ingredientObj.entity, id: 123, day: Math.round(dayDiff) }, req, res);
         }
       } else if (intent === 'DeleteIngredient') {
-        bot.deleteIngredient(jsonObj.entities[0].entity, res);
+        bot.deleteIngredient(jsonObj.entities[0].entity, req, res);
       } else if (intent === 'None') {
         if (jsonObj.entities.length === 1 && req.session.ingredient) {
           const dateObj = jsonObj.entities[0];
-          const dayDiff = (new Date(dateObj.resolution.values[0].end) - Date.now()) / 1000 / 86400;
-          bot.addIngredient({ name: req.session.ingredient, id: 123, day: dayDiff }, res);
+          let dayDiff;
+          if (dateObj.resolution.values[dateObj.resolution.values.length - 1].end !== undefined) {
+            dayDiff = (new Date(dateObj.resolution.values[dateObj.resolution.values.length - 1].end) - Date.now()) / 1000 / 86400;
+          } else {
+            dayDiff = (new Date(dateObj.resolution.values[dateObj.resolution.values.length - 1].value) - Date.now()) / 1000 / 86400;
+          }
+          bot.addIngredient({ name: req.session.ingredient, id: 123, day: Math.round(dayDiff) }, req, res);
           return;
         }
         
@@ -62,7 +73,19 @@ router.post('/', (req, res) => {
         } else if (count >= 5) {
           bot.say(res, 'Shut up bitch!');
         }
-	    }
+	    } else if (intent === 'AddTimer') {
+        let duration;
+        for (i in jsonObj.entities) {
+          if (entities[i].type === 'builtin.datetimeV2.duration') {
+            duration = jsonObj.entities[0].resolution.values[0].value;
+          }
+        }
+        if (duration === undefined) {
+          bot.say(res, 'OK, timer for 30 seconds.', 'AddTimer', { time: '30' });
+        } else {
+          bot.say(res, 'OK, a new timer.', 'AddTimer', { time: duration });
+        }
+      }
     });
 });
 

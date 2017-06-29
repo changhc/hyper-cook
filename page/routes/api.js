@@ -22,6 +22,7 @@ function pullStorage(req, res) {
 router.get('/foodStorage', pullStorage);
 
 router.put('/foodStorage', function(req, res) { 
+  console.log(req.headers)
   const username = req.session.loggedIn;
   if(username !== undefined) {
     console.log(`${username}:update food storage`);

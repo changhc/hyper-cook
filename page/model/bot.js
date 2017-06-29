@@ -9,12 +9,17 @@ module.exports = class Bot {
     res.send(JSON.stringify({ timestamp: Date.now(), action: actionArg, entities: entitiesArg, say: text }));
   }
 
-	deleteIngredient(nameArg, res) {
-    request.put(`http://localhost${process.env.PORT || 3000}/api/foodStorage`, {
-      delete: true,
-      fromBot: true,
-      name: nameArg,
-    }, (err, response, body) => {
+	deleteIngredient(nameArg, req, res) {
+    request({ 
+      uri: `http://localhost${process.env.PORT || 3000}/api/foodStorage`,
+      method: 'PUT',
+      json: {
+        delete: true,
+        fromBot: true,
+        name: nameArg,
+      },
+      headers: req.headers,
+      }, (err, response, body) => {
       if (err) {
         console.log(err);
         this.say(res, 'Sorry. Something went wrong.');
@@ -55,13 +60,19 @@ module.exports = class Bot {
     */
 	}
 
-	addIngredient(ingredient, res)  {
-    request.put(`http://localhost:${process.env.PORT || 3000}/api/foodStorage`, {
-      delete: false,
-      name: ingredient.name,
-      id: ingredient.id,
-      day: ingredient.day,
-    }, (err, response, body) => {
+	addIngredient(ingredient, req, res)  {
+    console.log(req.headers)
+    request({
+      uri: `http://localhost:${process.env.PORT || 3000}/api/foodStorage`,
+      method: 'PUT',
+      json: {
+        delete: false,
+        name: ingredient.name,
+        id: ingredient.id,
+        day: ingredient.day,
+      },
+      headers: req.headers,
+      }, (err, response, body) => {
       if (err) {
         console.log(err);
         this.say(res, 'Sorry. Something went wrong.');

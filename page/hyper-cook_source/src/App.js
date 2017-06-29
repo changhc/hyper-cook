@@ -75,7 +75,7 @@ class App extends Component {
     this.fetchChatBot=this.fetchChatBot.bind(this);
 
     this.logout=this.logout.bind(this);
-    this.apiUrl="/api";
+    this.apiUrl="/api/";
   }
   componentDidMount(){
     this.getFridge();
