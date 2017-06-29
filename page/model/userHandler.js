@@ -9,8 +9,8 @@ const changePassword = (username, password) => User.update({username}, {$set: {p
 const updateStorageByUserName = (name, newIngredient) =>
   User.findOneAndUpdate({ username: name }, { $push: { ingredients: newIngredient } }).exec();
 const deleteStorageById = (username, uid) => User.update(
-  { uid },
-  { $pull: { ingredients: { name: ingradientName } } },
+  { username },
+  { $pull: { ingredients: { id: uid } } },
   { multi: true }
 ).exec();
 module.exports = {
