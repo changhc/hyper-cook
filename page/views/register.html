@@ -2,15 +2,36 @@
 <html>
   <head>
     <title>Register</title>
-
+    <link rel="stylesheet" href="/static/css/login.css">
   </head>
-  <body class>
-    <form action="/register" name="register" method="post" id="loginform">
-      <input type="text" name="username" required="true" class="input" id="Username" placeholder="Username" />
-      <input type="password" name="password" required="true" class="input" id="Password" placeholder="Password">
-      <input type="password" name="repeatPassword" required="true" class="input" id="RepeatPassword" placeholder="Repeat password again">
-      <input type="submit" value="Register" class="loginbutton" id="userButton" value="SIGN UP">
-      </form>
-      <a href="/" class="back" >Back</a>
+  <body>
+    <div class="App-top"></div>
+    <div class="App-header">
+      HyperCook
+    </div>
+    <body class="align">
+      <div class="grid">
+        <form action="/register" method="post" class="form login">
+          <header class="login__header">
+            <h3 class="login__title">Register</h3>
+          </header>
+          <div class="login__body">
+            <div class="form__field">
+              <input type="username" name="username" required="true" id="Username" placeholder="Username">
+            </div>
+            <div class="form__field">
+              <input type="password" name="password" required="true" id="Password" placeholder="Password" />
+            </div>
+            <div class="form__field">        
+              <input type="password" name="repeatPassword" required="true" id="RepeatPassword" placeholder="Repeat password again">
+            </div>
+          </div>
+          <footer class="login__footer">
+            <input type="submit" value="sign up">
+            <p><a href="/" >Back</a></p>
+          </footer>
+        </form>
+      </div>
+    </body>
   </body>
 </html>

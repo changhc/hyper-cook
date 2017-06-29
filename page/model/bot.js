@@ -9,17 +9,18 @@ module.exports = class Bot {
     res.send(JSON.stringify({ timestamp: Date.now(), action: actionArg, entities: entitiesArg, say: text }));
   }
 
-	deleteIngredient(ingredientId, name, res) {
-    request.put('http://localhost:3000/api/foodStorage', {
+	deleteIngredient(nameArg, res) {
+    request.put(`http://localhost${process.env.PORT || 3000}/api/foodStorage`, {
       delete: true,
-      id: ingredientId,
+      fromBot: true,
+      name: nameArg,
     }, (err, response, body) => {
       if (err) {
         console.log(err);
         this.say(res, 'Sorry. Something went wrong.');
         return;
       }
-      this.say(res, `I\'ve removed ${name} from you fridge!`, 'Success', body);
+      this.say(res, `I\'ve removed ${nameArg} from you fridge!`, 'Success', body);
     });
     /*
     this.Fridge.findOne({ userId: userIdArg }, (err, fridge) => {
@@ -55,7 +56,7 @@ module.exports = class Bot {
 	}
 
 	addIngredient(ingredient, res)  {
-    request.put('http://localhost:3000/api/foodStorage', {
+    request.put(`http://localhost:${process.env.PORT || 3000}/api/foodStorage`, {
       delete: false,
       name: ingredient.name,
       id: ingredient.id,
@@ -106,7 +107,6 @@ module.exports = class Bot {
       tokens[i] = tokens[i][0].toUpperCase() + tokens[i].substr(1, tokens[i].length);
     }
     const foodName = tokens.join(' ');
-
     knex
       .select('title', 'url')
       .from('recipe')

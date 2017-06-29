@@ -1,6 +1,7 @@
 const express = require('express');
 const request = require('request');
 const router = express.Router();
+const knex = require('../model/knex');
 const Bot = require('../model/bot');
 const bot = new Bot();
 
@@ -30,13 +31,25 @@ router.post('/', (req, res) => {
       } else if (intent === 'AddIngredient') {
         if (jsonObj.entities.length === 0) {
           bot.say(res, 'Hmm... I don\'t quite understand what you want to add.');  
-        } else {
-          bot.addIngredient({name: jsonObj.entities[0].entity, id: 123, day: 8}, res);
+        } else if (jsonObj.entities.length === 1) {
+          req.session.ingredient = jsonObj.entities[0].entity;
+          bot.say(res, 'When is it due?', intent);
+        } else if (jsonObj.entities.length === 2) {
+          const dateObj = jsonObj.entities[0].type === 'ingredient' ? jsonObj.entities[1] : jsonObj.entities[0];
+          const ingredientObj = jsonObj.entities[0].type === 'ingredient' ? jsonObj.entities[0] : jsonObj.entities[1];
+          const dayDiff = (new Date(dateObj.resolution.values[0].end) - Date.now()) / 1000 / 86400;
+          bot.addIngredient({name: ingredientObj.entity, id: 123, day: dayDiff}, res);
         }
       } else if (intent === 'DeleteIngredient') {
-        bot.deleteIngredient(123, jsonObj.entities[0].entity, res);
+        bot.deleteIngredient(jsonObj.entities[0].entity, res);
       } else if (intent === 'None') {
-        console.log(req.session)
+        if (jsonObj.entities.length === 1 && req.session.ingredient) {
+          const dateObj = jsonObj.entities[0];
+          const dayDiff = (new Date(dateObj.resolution.values[0].end) - Date.now()) / 1000 / 86400;
+          bot.addIngredient({ name: req.session.ingredient, id: 123, day: dayDiff }, res);
+          return;
+        }
+        
         if (!req.session.noneState) {
           req.session.noneState = '0';
         } 

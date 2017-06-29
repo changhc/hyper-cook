@@ -2,14 +2,33 @@
 <html>
   <head>
     <title>Login</title>
-
+    <link rel="stylesheet" href="/static/css/login.css">
   </head>
   <body>
-      <form id="loginform" action="/" name="login" method="post">
-        <input type="text" name="username" required="true" class="input" id="Username" placeholder="Username"/>
-        <input type="password" name="password" required="true" class="input" id="Password" placeholder="Password" />            
-        <input type="submit" class="loginbutton" id="userButton" value="SIGN IN" />   
-      </form>
-      <a href="/register">Click here to sign up</a>
+    <div class="App-top"></div>
+    <div class="App-header">
+      HyperCook
+    </div>
+    <body class="align">
+      <div class="grid">
+        <form action="/" method="post" class="form login">
+      <header class="login__header">
+        <h3 class="login__title">Login</h3>
+      </header>
+      <div class="login__body">
+        <div class="form__field">
+          <input type="username" name="username" required="true" id="Username" placeholder="Username">
+        </div>
+        <div class="form__field">
+          <input type="password" name="password" required="true" id="Password" placeholder="Password" />
+        </div>
+      </div>
+      <footer class="login__footer">
+        <input type="submit" value="Login">
+        <p><span class="icon icon--info">?</span><a href="/register">Click here to sign up</a></p>
+      </footer>
+    </form>
+  </div>
+</body>
   </body>
 </html>

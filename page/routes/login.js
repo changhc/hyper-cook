@@ -52,14 +52,14 @@ router.post('/', function(req, res){
 });
 
 
-router.get('/logout', function(req, res){
+router.post('/logout', function(req, res){
 
   req.session.destroy(function (err){
     if(err){
       console.log(err);
     }else{
       console.log('User successfully logged out');
-      res.redirect('/login');
+      res.redirect('/');
     }
   });
 });

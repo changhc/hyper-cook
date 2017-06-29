@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const userHandler = require('../model/userHandler.js');
+const knex = require('../model/knex');
+
+const recipePerPage = 30;
 
 function pullStorage(req, res) {
   const username = req.session.loggedIn;
@@ -28,10 +31,17 @@ router.put('/foodStorage', function(req, res) {
       .then(() => pullStorage(req, res))
       .catch(err => console.log(err));
     } else {
-      userHandler.deleteStorageById(username, req.body.id)
-      .then(() => console.log("remove food from the freeze"))
-      .then(() => pullStorage(req, res))
-      .catch(err => console.log(err));
+      if(req.body.fromBot) {
+        userHandler.deleteStorageByName(username, req.body.name)
+        .then(()=>console.log('remove food from the freeze'))
+        .then(() => pullStorage(req, res))
+        .catch(err => console.log(err));
+      } else {
+        userHandler.deleteStorageById(username, req.body.id)
+        .then(() => console.log("remove food from the freeze"))
+        .then(() => pullStorage(req, res))
+        .catch(err => console.log(err));
+      }
     }
   } else {
     res.redirect('/');
@@ -59,6 +69,40 @@ router.post('/recipe', (req, res) => {
       res.send(JSON.stringify({ recipe: result }));
     })
     .catch(err => res.sendStatus(404));
+});
+
+router.post('/ingredient', (req, res) => {
+  const ingredient = req.body.ingredient;
+  if (!Array.isArray(ingredient) || ingredient === undefined) {
+    res.sendStatus(400);
+    return;
+  }
+
+  if (req.body.vague) {
+    const commandArray = [];
+    for (index in ingredient) {
+      commandArray.push(`(case when ${ingredient[index]} then 1 else 0 end)`);
+    }
+    knex
+      .select('title', 'url', 'img')
+      .from('recipe')
+      .orderByRaw(`(${commandArray.join(' + ')}) DESC`)
+      .limit(recipePerPage)
+      .then((result) => {
+        res.send(JSON.stringify({ recipe: result, next: result.length === recipePerPage }));
+      })
+      .catch(err => res.sendStatus(404));
+  } else {
+    knex
+      .select('title', 'url', 'img')
+      .from('recipe')
+      .whereRaw(ingredient.join(' and '))
+      .limit(recipePerPage)
+      .then((result) => {
+        res.send(JSON.stringify({ recipe: result, next: result.length === recipePerPage }));
+      })
+      .catch(err => res.sendStatus(404));
+  }
 });
 
 router.use('/message', require('./message'));
