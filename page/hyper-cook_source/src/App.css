@@ -6,10 +6,36 @@
   height: 30px;
   cursor: pointer;
 }
+.icon:hover{
+  opacity: 0.5; 
+}
 .App-top{
   height: 50px;
   background: #3d3835;
 }
+  .logout-div{
+    color: white;
+    font-weight: bold;
+    height:10vh;
+    width: 30vh;
+    cursor: pointer;
+    display: flex;
+    padding-top: 10px;
+  }
+  .logout-div:hover{
+    opacity: 0.5;
+  }
+    .logout-icon{
+      height: 30px;
+      cursor: pointer;
+    }
+    .logout{
+      text-align: center;
+      color: white;
+      font-weight: bold;
+      
+      line-height: 10vh;
+    }
 .App-header {
   background-color: #ff873f;
   height: 100px;

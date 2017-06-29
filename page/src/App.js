@@ -60,7 +60,7 @@ class App extends Component {
     this.addFridge=this.addFridge.bind(this);
     this.deleteSwitch=this.deleteSwitch.bind(this);
     this.deleteFridge=this.deleteFridge.bind(this);
-    this.apiUrl="https://hyper-cook.herokuapp.com/";
+    this.apiUrl="http://localhost:3000";
 
     this.onRecieveName=this.onRecieveName.bind(this);
     this.onRecieveDate=this.onRecieveDate.bind(this);

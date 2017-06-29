@@ -45,6 +45,31 @@ router.put('/foodStorage', function(req, res) {
   }
 });
 
+router.post('/recipe', (req, res) => {
+  let title = req.body.title;
+  if (title === undefined) {
+    res.sendStatus(400);
+    return;
+  }
+  const tokens = title.split(' ');
+  for (i in tokens) {
+    tokens[i] = tokens[i][0].toUpperCase() + tokens[i].substr(1, tokens[i].length);
+  }
+  title = tokens.join(' ');
+
+  knex
+    .select('title', 'url', 'img')
+    .from('recipe')
+    .where('title', 'like', `%${title}%`)
+    .limit(recipePerPage)
+    .then((result) => {
+      res.send(JSON.stringify({ recipe: result }));
+    })
+    .catch(err => res.sendStatus(404));
+});
+
+router.use('/message', require('./message'));
+
 
 
 module.exports = router;

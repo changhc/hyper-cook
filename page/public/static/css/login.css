@@ -72,7 +72,7 @@ a {
 }
 
 a:hover {
-  color: #ff873f;
+  color: orange;
 }
 
 /* modules/form.css */
@@ -172,7 +172,7 @@ input[type='submit'] {
 
 .login input[type='submit']:focus,
 .login input[type='submit']:hover {
-  background-color: orange;
+  background-color: #ff873f;
 }
 
 .login__footer {
@@ -195,4 +195,17 @@ input[type='submit'] {
 
 .login__footer p {
   margin: 0;
+}
+.App-top{
+  height: 50px;
+  background: #3d3835;
+}
+
+.App-header {
+  background-color: #ff873f;
+  height: 150px;
+  padding: 20px;
+  color: white;
+  font-size: 70px;
+  font-weight: bold;
 }
