@@ -1,4 +1,5 @@
-import React, { Component, } from 'react';
+import React, { Component } from 'react';
+import ReactCountdownClock from 'react-countdown-clock';
 import './App.css';
 import Fridge from './Fridge.js';
 import Recipe from './Recipe.js';
@@ -42,14 +43,16 @@ class App extends Component {
       //
       chatLog: [
         {id: 0,from: 0, say:"Hi, HyperCook chatbot at your service"},
-        {id: 1,from: 1, say:"I bought an egg that will due in 7 days"},
-        {id: 2,from: 0, say:"OK, I will add it on your list."}
+        {id: 1,from: 1, say:"Find the recipe of cake for me"},
+        {id: 2,from: 0, say:"OK, I will find some for you."}
         ],
       chatCount: 3,
       visibleChatRoom: false,
       chatInput: "",
       //
-      userId: "ric", 
+      userId: "ric",
+      timerSec: 10,
+      timer: null,
     }
 
     this.intoQueue=this.intoQueue.bind(this);
@@ -73,7 +76,7 @@ class App extends Component {
     this.changeChatInput=this.changeChatInput.bind(this);
     this.sendChatInput=this.sendChatInput.bind(this);
     this.fetchChatBot=this.fetchChatBot.bind(this);
-
+    this.timerCallback=this.timerCallback.bind(this);
     this.logout=this.logout.bind(this);
     this.apiUrl="/api/";
   }
@@ -409,6 +412,22 @@ class App extends Component {
         case "FindRecipe":
           this.fetchRecipeByName(entities.food);
           break;
+        case "AddTimer":
+          let timerSec = entities.time;
+          this.setState({
+            timerSec: entities.time,
+            timer:
+            (<div className="timer">
+                      <ReactCountdownClock 
+                        seconds={entities.time}
+                        color="#FFFFFF"
+                        alpha={0.9}
+                        size={100}
+                        onComplete={this.timerCallback}
+                        />
+            </div>),
+          })
+          break;
         case "None":
         case "Greetings":
         default:
@@ -436,6 +455,16 @@ class App extends Component {
         chatLog,
         chatCount: this.state.chatCount+1,
       })
+    });
+  }
+  timerCallback(){
+    this.setState({
+      timer:null,
+      alert:(<SweetAlert
+          success
+          title="Time's up!"
+          onConfirm={this.hideAlert}
+      />)
     });
   }
   logout(){
@@ -467,6 +496,7 @@ class App extends Component {
         </div>
         <div className="App-header">
           HyperCook
+          {this.state.timer}
         </div>
         <div className="main-body">
           <div className="fridge">

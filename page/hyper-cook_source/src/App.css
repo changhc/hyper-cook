@@ -43,7 +43,18 @@
   color: white;
   font-size: 70px;
   font-weight: bold;
+  display: static;
 }
+.timer{
+  float: right;
+  margin-right:15%;
+}
+.timer-invisible{
+  float: right;
+  margin-right:15%;
+  display: none;
+}
+
 input:focus{
     outline: none;
 }
@@ -58,6 +69,7 @@ input:focus{
   text-align: center;
   display: inline-block; 
 }
+
 
   .fridge{
     width: 200px;
@@ -187,6 +199,16 @@ input:focus{
           background: #ddd6d0;
           width: 80%;
           float:left;
+          margin-bottom: 10px;
+          padding: 1px;
+        }
+        .sayblock-from-timer{
+          border: solid orange 2px;
+          border-radius: 3px;
+          background: #ffe0a3;
+          width: 80%;
+          float: left;
+          height: 100px;
           margin-bottom: 10px;
           padding: 1px;
         }
