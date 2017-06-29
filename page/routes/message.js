@@ -1,5 +1,5 @@
 const express = require('express');
-const request = require('request');
+const request = require('request').defaults({ jar: true });
 const router = express.Router();
 const knex = require('../model/knex');
 const Bot = require('../model/bot');
@@ -44,10 +44,10 @@ router.post('/', (req, res) => {
             dayDiff = (new Date(dateObj.resolution.values[dateObj.resolution.values.length - 1].value) - Date.now()) / 1000 / 86400;
           }
 
-          bot.addIngredient({ name: ingredientObj.entity, id: 123, day: Math.round(dayDiff) }, req, res);
+          bot.addIngredient({ name: ingredientObj.entity, id: Date.now(), day: Math.round(dayDiff) }, req.session.loggedIn, res);
         }
       } else if (intent === 'DeleteIngredient') {
-        bot.deleteIngredient(jsonObj.entities[0].entity, req, res);
+        bot.deleteIngredient(jsonObj.entities[0].entity, req.session.loggedIn, res);
       } else if (intent === 'None') {
         if (jsonObj.entities.length === 1 && req.session.ingredient) {
           const dateObj = jsonObj.entities[0];
@@ -57,7 +57,7 @@ router.post('/', (req, res) => {
           } else {
             dayDiff = (new Date(dateObj.resolution.values[dateObj.resolution.values.length - 1].value) - Date.now()) / 1000 / 86400;
           }
-          bot.addIngredient({ name: req.session.ingredient, id: 123, day: Math.round(dayDiff) }, req, res);
+          bot.addIngredient({ name: req.session.ingredient, id: Date.now(), day: Math.round(dayDiff) }, req.session.loggedIn, res);
           return;
         }
         
@@ -76,8 +76,8 @@ router.post('/', (req, res) => {
 	    } else if (intent === 'AddTimer') {
         let duration;
         for (i in jsonObj.entities) {
-          if (entities[i].type === 'builtin.datetimeV2.duration') {
-            duration = jsonObj.entities[0].resolution.values[0].value;
+          if (jsonObj.entities[i].type === 'builtin.datetimeV2.duration') {
+            duration = jsonObj.entities[i].resolution.values[0].value;
           }
         }
         if (duration === undefined) {

@@ -11,6 +11,7 @@
     "rc-time-picker": "^2.4.1",
     "react": "^15.6.1",
     "react-bootstrap-sweetalert": "^3.0.0",
+    "react-countdown-clock": "^1.1.0",
     "react-dom": "^15.6.1",
     "react-fab": "^1.0.0",
     "react-router": "^4.1.1",
@@ -27,5 +28,5 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-   "proxy": "http://localhost:3000"
+  "proxy": "http://localhost:3000"
 }

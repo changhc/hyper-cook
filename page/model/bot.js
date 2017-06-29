@@ -9,23 +9,23 @@ module.exports = class Bot {
     res.send(JSON.stringify({ timestamp: Date.now(), action: actionArg, entities: entitiesArg, say: text }));
   }
 
-	deleteIngredient(nameArg, req, res) {
+	deleteIngredient(nameArg, username, res) {
     request({ 
-      uri: `http://localhost${process.env.PORT || 3000}/api/foodStorage`,
+      uri: `http://localhost:${process.env.PORT || 3000}/api/foodStorage`,
       method: 'PUT',
       json: {
+        userId: username,
         delete: true,
         fromBot: true,
         name: nameArg,
       },
-      headers: req.headers,
       }, (err, response, body) => {
       if (err) {
         console.log(err);
         this.say(res, 'Sorry. Something went wrong.');
         return;
       }
-      this.say(res, `I\'ve removed ${nameArg} from you fridge!`, 'Success', body);
+      this.say(res, `I\'ve removed ${nameArg} from you fridge!`, 'DeleteIngredient', body);
     });
     /*
     this.Fridge.findOne({ userId: userIdArg }, (err, fridge) => {
@@ -60,25 +60,24 @@ module.exports = class Bot {
     */
 	}
 
-	addIngredient(ingredient, req, res)  {
-    console.log(req.headers)
+	addIngredient(ingredient, username, res)  {
     request({
       uri: `http://localhost:${process.env.PORT || 3000}/api/foodStorage`,
       method: 'PUT',
       json: {
         delete: false,
+        userId: username,
         name: ingredient.name,
         id: ingredient.id,
         day: ingredient.day,
       },
-      headers: req.headers,
       }, (err, response, body) => {
       if (err) {
         console.log(err);
         this.say(res, 'Sorry. Something went wrong.');
         return;
       }
-      this.say(res, `I\'ve added ${ingredient.name} to you fridge!`, 'Success', body);
+      this.say(res, `I\'ve added ${ingredient.name} to you fridge!`, 'AddIngredient', body);
     });
     /*
     if (typeof(ingredient) !== 'object') {

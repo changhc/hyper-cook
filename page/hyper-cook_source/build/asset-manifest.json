@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "main.css": "static/css/main.8614a191.css",
   "main.css.map": "static/css/main.8614a191.css.map",
 <<<<<<< HEAD
@@ -18,4 +19,10 @@
   "main.js": "static/js/main.5c6ea0bd.js",
   "main.js.map": "static/js/main.5c6ea0bd.js.map"
 >>>>>>> 7e32e7cb795bb1cdb8bcd95ff24d5aae7551a090
+=======
+  "main.css": "static/css/main.579234d3.css",
+  "main.css.map": "static/css/main.579234d3.css.map",
+  "main.js": "static/js/main.92f06282.js",
+  "main.js.map": "static/js/main.92f06282.js.map"
+>>>>>>> 56a2e8837895991b2874d845829c3fda56722f2b
 }
