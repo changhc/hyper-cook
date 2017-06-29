@@ -3,7 +3,7 @@
 var mongoose = require('mongoose');
 
 var initialize = () => {
-  mongoose.connect(process.env.MONGOLAB_URI || 'mongodb://localhost/user_data');
+  mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/user_data');
   var db = mongoose.connection;
 
   db.on('error', function (err) {

@@ -1,3 +1,4 @@
+require('dotenv').load();
 var path = require('path');
 var express = require('express');
 //var redis   = require("redis");
@@ -32,7 +33,7 @@ app.use(session({
     secret: 'ssshhhhh',
     // create new redis store.
     store: new MongoStore({
-      url: 'mongodb://localhost/test-app',
+      url: process.env.MONGODB_URI || 'mongodb://localhost/test-app',
       ttl: 14 * 24 * 60 * 60 // = 14 days. Default
     }),
     resave: false,

@@ -76,7 +76,7 @@ class App extends Component {
     this.sendChatInput=this.sendChatInput.bind(this);
     this.fetchChatBot=this.fetchChatBot.bind(this);
 
-    this.apiUrl="https://hyper-cook.herokuapp.com/api/";
+    this.apiUrl="http://localhost:3000/api/";
   }
   componentDidMount(){
     this.getFridge();
@@ -369,6 +369,7 @@ class App extends Component {
     console.log(text);
     fetch(`${this.apiUrl}message`, {
       method: 'post',
+      credentials: 'same-origin',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
