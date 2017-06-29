@@ -6,6 +6,7 @@ import Chatroom from './Chatroom.js';
 import './rccalendar.css';
 import deleteIcon from './delete.png';
 import addIcon from './add.png';
+import logoutIcon from './logout.png';
 import SweetAlert from 'react-bootstrap-sweetalert';
 import Calendar from 'rc-calendar';
 import enUS from 'rc-calendar/lib/locale/en_US';
@@ -30,12 +31,9 @@ class App extends Component {
   constructor(){
     super();
     this.state={
-      fridge:[
-      ],
+      fridge:[],
       deletemode: false,
-      queue:[
-        {}
-      ],
+      queue:[],
       recipeList:[],
       count:5,
       alert: null,
@@ -76,11 +74,13 @@ class App extends Component {
     this.sendChatInput=this.sendChatInput.bind(this);
     this.fetchChatBot=this.fetchChatBot.bind(this);
 
+    this.logout=this.logout.bind(this);
     this.apiUrl="http://localhost:3000/api/";
   }
   componentDidMount(){
     this.getFridge();
   }
+  
   findTarget(array, id){
     for (let i = 0, l = array.length; i < l; i++)
       if (array[i].id === id)
@@ -166,7 +166,7 @@ class App extends Component {
             onConfirm={this.onRecieveName}
             onCancel={this.hideAlert}
         />)});
-    } else {
+    }else{
       this.setState({
       alert:(<SweetAlert
             title="Please switch off delete mode"
@@ -387,6 +387,7 @@ class App extends Component {
         from: 0,
         say: botSay,
       }
+
       let chatLog = this.state.chatLog;
       chatLog.push(newLog);
       this.setState({
@@ -437,12 +438,24 @@ class App extends Component {
       })
     });
   }
+  logout(){
+    fetch(`/logout`, {		
+      credentials: 'same-origin'		
+    }).then(this.checkStatus)
+    .catch(error=>{
+      console.log('message fail...')
+      console.log(error);
+    })
+  }
   render() {
     return (
       <div className="App">        
         {this.state.alert}
         <div className="App-top">
-
+          <div className="logout-div" onClick={this.logout}>
+            <img className="logout-icon" src={logoutIcon} alt="@"/>
+            <div className="logout">logout</div>
+          </div>
         </div>
         <div className="App-header">
           HyperCook
@@ -467,7 +480,6 @@ class App extends Component {
             />
           </div>
         </div>
-        
         <Chatroom 
           chatLog={this.state.chatLog}
           chatInput={this.state.chatInput}
@@ -476,7 +488,6 @@ class App extends Component {
           changeChatInput={this.changeChatInput}
           sendChatInput={this.sendChatInput}
         />
-
       </div>
     );
   }
