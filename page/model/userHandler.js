@@ -13,6 +13,11 @@ const deleteStorageById = (username, uid) => User.update(
   { $pull: { ingredients: { id: uid } } },
   { multi: true }
 ).exec();
+const deleteStorageByName = (username, foodName) => User.update(
+  { username },
+  { $pull: { ingredients: { name: foodName } } },
+  { multi: true }
+).exec();
 module.exports = {
   add,
   findByUsername,
@@ -21,4 +26,5 @@ module.exports = {
   changePassword,
   updateStorageByUserName,
   deleteStorageById,
+  deleteStorageByName, 
 };

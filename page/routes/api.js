@@ -28,10 +28,17 @@ router.put('/foodStorage', function(req, res) {
       .then(() => pullStorage(req, res))
       .catch(err => console.log(err));
     } else {
-      userHandler.deleteStorageById(username, req.body.id)
-      .then(() => console.log("remove food from the freeze"))
-      .then(() => pullStorage(req, res))
-      .catch(err => console.log(err));
+      if(req.body.fromBot) {
+        userHandler.deleteStorageByName(username, req.body.name)
+        .then(()=>console.log('remove food from the freeze'))
+        .then(() => pullStorage(req, res))
+        .catch(err => console.log(err));
+      } else {
+        userHandler.deleteStorageById(username, req.body.id)
+        .then(() => console.log("remove food from the freeze"))
+        .then(() => pullStorage(req, res))
+        .catch(err => console.log(err));
+      }
     }
   } else {
     res.redirect('/');

@@ -247,8 +247,8 @@ class App extends Component {
     this.setState({deletemode:!this.state.deletemode})
   }
 
-  getFridge(){
-    fetch(`/api/foodStorage`, {		
+  getFridge() {
+    fetch('/api/foodStorage', {
       credentials: 'same-origin'		
     })		
     .then(res => res.json())		
