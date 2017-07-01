@@ -10,9 +10,17 @@ a faster way for you to organize your refrigerator as well as delectable cuisine
 
 ## Directory Tree
 
--- parser: scripts we used to parse and process all recipes from food2fork
--- frontend: the frontend part, using ReactJS
--- backend: the backend part, using Express, MongoDB and PostgreSQL
+```
+hyper-cook
+├── frontend    // the frontend part, using ReactJS
+├── backend     // the backend part, using Express, MongoDB and PostgreSQL
+│   ├── model
+│   ├── views
+│   ├── routes
+│   └── public
+└── parser      // scripts we used to parse and process all recipes from food2fork
+
+```
 
 ## License
 
